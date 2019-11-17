@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>
+        Lab 04
+    </title>
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/styled-components/dist/styled-components.min.js"></script>
+
+</head>
+
+<body>
+    <div id="container"></div>
+
+    <script type="text/babel">
+
+            // Title Component
+        const Title = ({className}) =>{
+        return (
+            <div className = {className}>
+                <h1>My Favorite Movies</h1>
+                <h3>Rolando</h3>
+            </div>
+        )};
+
+            // Movie Component
+        const Movie = ({className, name, link, textColor, textSize}) =>{
+        return (
+            <div className = {className}>
+                <li> {name}: <a href={link}>{name}</a></li>
+            </div>
+        )};
+            // App Component
+        const App = ({className}) =>{
+        return (
+            <div className = {className}>
+                <StyleTitle />
+                <ol>
+                    <StyleMovie name="Alladin 2019" link="https://en.wikipedia.org/wiki/Aladdin_(2019_film)" textColor="#33334d"/>
+                    <StyleMovie name="Spider-Man: Far From Home 2" link="https://en.wikipedia.org/wiki/Spider-Man:_Far_From_Home" textSize="150%" />
+                    <StyleMovie name="Lion King 2019" link="https://en.wikipedia.org/wiki/The_Lion_King_(2019_film)" textColor="green"/>
+                </ol>
+            </div>
+        )};
+
+        const StyledApp = styled(App)`
+            background-color: papayawhip;   
+            box-shadow: 0px 0px 5px gray;   
+            padding: 10px
+        `;
+        const StyleTitle = styled(Title)`
+            color: #006666;
+            border: 1px solid black;
+            background-color: #ffffcc;
+            padding: 10px
+            font-weight: bold;
+        `;
+        const StyleMovie = styled(Movie)`
+            background-color: #ccffee;
+            color: ${props => props.textColor};
+            font-size: ${props => props.textSize};
+
+        `;    
+
+        ReactDOM.render(
+            <StyledApp />,
+            document.getElementById('container')
+        );
+
+    </script>
+
+
+</body>
+
+</html>
