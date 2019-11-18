@@ -51,13 +51,15 @@
                 count -= -1;
                 resultQuiz = "";
                 console.log(count)
-                setQuiz("nah");
+                setQuiz(count);
                 
             }
             const handlePreviousButton = (event) => {
-                count -= 1;
+                if(count > 0){
+                    count -= 1;
+                }
                 resultQuiz = "";
-                setQuiz("aye");
+                setQuiz(count);
                 console.log(count)
             }
             const handleSubmit = (event) => {
@@ -68,6 +70,7 @@
                 }else{
                     resultColor = "red"
                     resultQuiz = "Wrong"
+                    
                     setQuiz("hue");
                 }
 
@@ -78,8 +81,8 @@
                     <div className = {props.className}>
                         <StyleTitle />
                         <StyleMovie {...movies[count]}/>
-
                         <MovieForm />
+                        <RevealAnswer color2={resultColor} answer={trueAnswer} />
                         <input type='button' value='Previous' onClick={handlePreviousButton} />
                         &nbsp;&nbsp;
                         <input type='button' value='Submit' onClick={handleSubmit} />
@@ -116,25 +119,25 @@
                         <label>
                             <input type='radio' name='checkboxGroup' value="a"
                                 onChange={handleRadio} />
-                                &nbsp;{one}
+                                &nbsp; a. {one}
                         </label>
                         <br /> <br />
                         <label>
                             <input type='radio' name='checkboxGroup' value="b"
                                 onChange={handleRadio} />
-                                &nbsp;{two}
+                                &nbsp; b. {two}
                         </label>
                         <br /> <br />
                         <label>
                             <input type='radio' name='checkboxGroup' value="c"
                                 onChange={handleRadio} />
-                                &nbsp;{three}
+                                &nbsp; c. {three}
                         </label>
                         <br /> <br />
                         <label>
                             <input type='radio' name='checkboxGroup' value="d"
                                 onChange={handleRadio} />
-                                &nbsp;{four}
+                                &nbsp; d. {four}
                         </label>
                         <br /> <br />
                     </fieldset>
@@ -173,14 +176,33 @@
             <legend> Question {count} </legend>
             <br /><br />
                 <li> {question} </li>
-                <br />
-                    <StyledResult>{resultQuiz} </StyledResult>
-                <br />
+                <br /><StyledResult color={resultColor} /><br />
             </fieldset>
                 <br /><br />
             </div>
             
         )};
+
+        const AnswerResult = ({className, color}) =>{
+            return(
+                <div className = {className}>
+                    {resultQuiz}
+                <br />
+                </div>
+            )
+        };
+
+        const RevealAnswer = ({className, color2, answer}) =>{
+            return(
+                
+                <div className = {className}>
+                <br />
+                    The answer is:    {answer}
+                <br />
+                <br />
+                </div>
+            )
+        };
 
         const StyledMovieList = styled(AppHookStateFul)`
             background-color: papayawhip;   
@@ -200,9 +222,12 @@
             background-color: papayawhip;
             font-weight: bold;
         `;
-        const StyledResult = styled.h2`
-            color: ${resultColor};
+        const StyledResult = styled(AnswerResult)`
+            font-size: 200%;
+            font-weight: bold;
+            color: ${props => props.color};
         `;  
+
 
 
         ReactDOM.render(
