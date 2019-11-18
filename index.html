@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <title>
-        Lab 04
+        Quiz Sample
     </title>
     <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
@@ -18,35 +18,136 @@
 
     <script type="text/babel">
 
-        const QuizHook = (props) => {
-            const [movies, setMovies] = React.useState([]);
+        let count = 0;
+        let one = null;
+        let two = null;
+        let three = null;
+        let four = null;
+        let trueAnswer = null;
+        let choice = null;
+        let quiz = [];
+        let resultQuiz = "";
+        let resultColor = "green";
 
-            React.useState( () => {
+        const AppHookStateFul = (props) => {
+            const [movies, setMovies] = React.useState([]);
+            const [quiz, setQuiz] = React.useState([]);
+
+            React.useEffect( () => {
                 (async () => {
                     try {
-                        const response = await fetch('https://quiz212api.herokuapp.com/movies');
-                        if (!response.ok)
+                        const response = await fetch(`https://quiz212api.herokuapp.com/movies`);
+                        if (!response.ok) 
                             throw Error(response.status + ': ' + response.statusText);
                         const result = await response.json();
                         setMovies(result);
                     }catch(error){
                         console.log('Fetch API Error: ' + error);
                     }
-                })
+                })();
             },[]);
+
+            const handleNextButton = (event) => {
+                count -= -1;
+                resultQuiz = "";
+                console.log(count)
+                setQuiz("nah");
+                
+            }
+            const handlePreviousButton = (event) => {
+                count -= 1;
+                resultQuiz = "";
+                setQuiz("aye");
+                console.log(count)
+            }
+            const handleSubmit = (event) => {
+                if(choice == trueAnswer){
+                    resultColor = "green"
+                    resultQuiz = "Correct"
+                    setQuiz("huh");
+                }else{
+                    resultColor = "red"
+                    resultQuiz = "Wrong"
+                    setQuiz("hue");
+                }
+
+            }
 
             return (
                 <React.Fragment>
                     <div className = {props.className}>
-                        <StyledTitle />
-                        {movies.map(movie =>
-                            <StyleMovie key={movie.id} {...movie}/>
-                        )}
-                    </div>
-                </React.Fragment>
+                        <StyleTitle />
+                        <StyleMovie {...movies[count]}/>
 
-            )
+                        <MovieForm />
+                        <input type='button' value='Previous' onClick={handlePreviousButton} />
+                        &nbsp;&nbsp;
+                        <input type='button' value='Submit' onClick={handleSubmit} />
+                        &nbsp;&nbsp;
+                        <input type='button' value='Next' onClick={handleNextButton} />
+                    </div>
+                    
+                </React.Fragment>
+            );
         }
+
+
+    /// Form Desu
+    const MovieForm = () => {
+        const [checkboxGroup, setCheckboxGroup] = React.useState([]);
+
+        const [showForm, setShowForm] = React.useState(true);
+
+        const handleRadio = (event) => {
+            choice = event.target.value;
+        }
+
+        
+
+
+        if  ( showForm ){
+
+
+            return (
+                // <React.Fragment>
+                <StyledForm>
+                    <fieldset>
+                        <legend>Select your answer: </legend>
+                        <label>
+                            <input type='radio' name='checkboxGroup' value="a"
+                                onChange={handleRadio} />
+                                &nbsp;{one}
+                        </label>
+                        <br /> <br />
+                        <label>
+                            <input type='radio' name='checkboxGroup' value="b"
+                                onChange={handleRadio} />
+                                &nbsp;{two}
+                        </label>
+                        <br /> <br />
+                        <label>
+                            <input type='radio' name='checkboxGroup' value="c"
+                                onChange={handleRadio} />
+                                &nbsp;{three}
+                        </label>
+                        <br /> <br />
+                        <label>
+                            <input type='radio' name='checkboxGroup' value="d"
+                                onChange={handleRadio} />
+                                &nbsp;{four}
+                        </label>
+                        <br /> <br />
+                    </fieldset>
+                </StyledForm>
+            // </React.Fragment>
+
+            );
+        }
+
+
+
+    }
+
 
 
 
@@ -54,37 +155,59 @@
         const Title = ({className}) =>{
         return (
             <div className = {className}>
-                <h1>My Favorite Movies</h1>
-                <h3>Rolando</h3>
+                <h1>ICS 212 Database</h1>
             </div>
         )};
 
             // Movie Component
-        const Movie = ({className, name, link, textColor, textSize}) =>{
+        const Movie = ({className, question, a, b, c, d, answer}) =>{
+            {one = a;
+            two = b;
+            three = c;
+            four = d;
+            trueAnswer = answer;
+            }
         return (
             <div className = {className}>
-                <li> {name}: <a href={link}>{name}</a></li>
+            <fieldset>
+            <legend> Question {count} </legend>
+            <br /><br />
+                <li> {question} </li>
+                <br />
+                    <StyledResult>{resultQuiz} </StyledResult>
+                <br />
+            </fieldset>
+                <br /><br />
             </div>
+            
         )};
 
-        const StyledApp = styled(QuizHook)`
+        const StyledMovieList = styled(AppHookStateFul)`
             background-color: papayawhip;   
             box-shadow: 0px 0px 5px gray;   
             padding: 10px
         `;
         const StyleTitle = styled(Title)`
-            color: #006666;
-            border: 1px solid black;
-            background-color: #ffffcc;
+            background-color: papayawhip;
             padding: 10px
             font-weight: bold;
         `;
         const StyleMovie = styled(Movie)`
-            background-color: #ccffee;
-        `;    
+            background-color: papayawhip;
+
+        `;
+        const StyledForm = styled.form`
+            background-color: papayawhip;
+            font-weight: bold;
+        `;
+        const StyledResult = styled.h2`
+            color: ${resultColor};
+        `;  
+
 
         ReactDOM.render(
-            <StyledApp />,
+            <StyledMovieList />,
+            
             document.getElementById('container')
         );
 
