@@ -28,6 +28,9 @@
         let quiz = [];
         let resultQuiz = "";
         let resultColor = "green";
+        let score = 0;
+        let checkScore= 0;
+        let doubleTapSubmit = false;
 
         const AppHookStateFul = (props) => {
             const [movies, setMovies] = React.useState([]);
@@ -46,12 +49,14 @@
                     }
                 })();
             },[]);
-
+        // I know I am not following DRY principles
             const handleNextButton = (event) => {
                 count -= -1;
                 resultQuiz = "";
-                console.log(count)
+                console.log(count);
                 setQuiz(count);
+                trueAnswer = "";
+                doubleTapSubmit = false;
                 
             }
             const handlePreviousButton = (event) => {
@@ -59,6 +64,7 @@
                     count -= 1;
                 }
                 resultQuiz = "";
+                trueAnswer = "";
                 setQuiz(count);
                 console.log(count)
             }
@@ -66,6 +72,10 @@
                 if(choice == trueAnswer){
                     resultColor = "green"
                     resultQuiz = "Correct"
+                    if(doubleTapSubmit == false){
+                        score -= -1;
+                        doubleTapSubmit = true;
+                    }
                     setQuiz("huh");
                 }else{
                     resultColor = "red"
@@ -75,6 +85,7 @@
                 }
 
             }
+            checkScore = movies.length;
 
             return (
                 <React.Fragment>
@@ -95,7 +106,7 @@
         }
 
 
-    /// Form Desu
+    /// Form 
     const MovieForm = () => {
         const [checkboxGroup, setCheckboxGroup] = React.useState([]);
 
@@ -158,7 +169,7 @@
         const Title = ({className}) =>{
         return (
             <div className = {className}>
-                <h1>ICS 212 Database</h1>
+                <h1>ICS 211 Term 2 Test</h1>
             </div>
         )};
 
@@ -173,7 +184,7 @@
         return (
             <div className = {className}>
             <fieldset>
-            <legend> Question {count} </legend>
+            <legend> Question {count}  Score: {score} / {checkScore}</legend>
             <br /><br />
                 <li> {question} </li>
                 <br /><StyledResult color={resultColor} /><br />
